@@ -1,36 +1,197 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🎯 Faith Game B2B — Event Registration Platform
 
-## Getting Started
+A modern event registration website with real-time tracking, unique participant IDs, and seamless integration with Google Sheets as a lightweight backend.
 
-First, run the development server:
+🔗 Live Demo: https://faith-game-b2b-regist.vercel.app/
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## 🚀 Overview
+
+Faith Game B2B is a web-based registration platform built for a church community event.
+The goal was to create a **simple, fast, and scalable system** without relying on a traditional backend server.
+
+This project demonstrates how modern frontend tools can be combined with serverless solutions to build a **production-ready system with zero infrastructure cost**.
+
+---
+
+## ✨ Key Features
+
+* 📝 **Online Registration Form**
+
+  * Clean, responsive UI
+  * Validation with smooth UX
+
+* 🆔 **Unique Registration ID (B2B-001, B2B-002, ...)**
+
+  * Automatically generated
+  * Consistent between frontend & backend
+
+* 📊 **Real-time Participant Counter**
+
+  * Fetches live data from Google Sheets
+
+* ⚡ **Serverless Backend**
+
+  * Powered by Google Apps Script
+  * No database setup required
+
+* 🔒 **Race Condition Protection**
+
+  * Uses locking mechanism to prevent duplicate IDs
+
+* 🎨 **Modern UI/UX**
+
+  * Built with TailwindCSS + animations
+  * Interactive carousel & visual elements
+
+---
+
+## 🧠 Problem & Solution
+
+### ❌ Problem
+
+Traditional event registration systems:
+
+* Require backend setup (costly & complex)
+* Risk duplicate data under high traffic
+* Hard to maintain for small communities
+
+### ✅ Solution
+
+This project solves it by:
+
+* Using **Google Sheets as a database**
+* Adding **Apps Script as a lightweight API**
+* Implementing **locking system** to prevent race conditions
+* Generating **human-readable unique IDs**
+
+---
+
+## 🛠️ Tech Stack
+
+### Frontend
+
+* Next.js (App Router)
+* Tailwind CSS
+* Framer Motion
+* React Hook Form
+
+### Backend (Serverless)
+
+* Google Apps Script
+* Google Sheets (Database)
+
+### Deployment
+
+* Vercel (Frontend)
+* Google Script Web App (API)
+
+---
+
+## ⚙️ System Architecture
+
+```text
+User → Next.js Frontend → Google Apps Script → Google Sheets
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### Flow:
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+1. User submits registration form
+2. Frontend sends data via POST request
+3. Apps Script:
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+   * Locks execution (prevent race condition)
+   * Validates duplicate phone number
+   * Generates unique ID (B2B-XXX)
+   * Saves to Google Sheets
+4. Response sent back to frontend
+5. UI displays success + Registration ID
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## 🔐 Race Condition Handling
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+To ensure unique IDs, the system uses:
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+* `LockService` from Google Apps Script
+* Sequential ID generation based on row count
 
-## Deploy on Vercel
+This guarantees:
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+* No duplicate IDs
+* Safe concurrent submissions
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+---
+
+## 📸 UI Highlights
+
+* Animated hero section
+* Interactive event carousel
+* Clean and minimal registration form
+* Responsive design for all devices
+
+---
+
+## 📦 Installation (Local Development)
+
+```bash
+git clone https://github.com/your-username/your-repo.git
+cd your-repo
+npm install
+npm run dev
+```
+
+---
+
+## 🔑 Environment Variables
+
+Create `.env.local`:
+
+```env
+NEXT_PUBLIC_GOOGLE_SCRIPT_URL=YOUR_GOOGLE_SCRIPT_URL
+```
+
+---
+
+## 🚀 Deployment
+
+### Frontend
+
+* Deployed on Vercel
+
+### Backend
+
+* Google Apps Script deployed as Web App
+* Access: Anyone
+
+---
+
+## 📈 Future Improvements
+
+* 📱 WhatsApp Bot Integration
+* 📧 Email Confirmation System
+* 🎟️ QR Code Check-in
+* 📊 Admin Dashboard
+* 🔍 Search & filter participants
+
+---
+
+## 💡 What I Learned
+
+* Building serverless systems with minimal cost
+* Handling concurrency (race condition) in distributed systems
+* Designing scalable frontend architecture
+* Integrating third-party services effectively
+
+---
+
+## 🤝 Let's Connect
+
+I'm open to opportunities and collaborations, especially in:
+
+* Fullstack Development
+* AI-integrated applications
+* Scalable web systems
+
+Feel free to reach out!
