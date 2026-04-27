@@ -2,6 +2,7 @@
 
 import Link from "next/link";
 import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
 import EventBanner from "@/components/EventBanner";
 import EventCarousel from "@/components/EventCarousel";
 import ShapesBackground from "@/components/ShapesBackground";
@@ -39,7 +40,7 @@ export default function Home() {
               className="sm:hidden inline-flex w-full items-center justify-between rounded-full border border-white/10 bg-white/5 px-4 py-3 text-left text-[12px] uppercase tracking-[3px] text-white transition hover:bg-pink-500 hover:text-black"
             >
               <span>Menu</span>
-              <span className="text-sm">{navOpen ? "×" : "☰"}</span>
+              <span className="text-2xl leading-none">{navOpen ? "×" : "☰"}</span>
             </button>
             <button
               type="button"
@@ -49,36 +50,44 @@ export default function Home() {
               Beli Jersey KTM
             </button>
           </div>
-          {navOpen && (
-            <div className="mt-4 flex flex-col gap-3 sm:hidden">
-              <a
-                href="https://www.holytrinitycarmel.com/#0"
-                target="_blank"
-                rel="noreferrer"
-                className="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-center text-[12px] uppercase tracking-[2px] text-white transition hover:bg-pink-500 hover:text-black"
+          <AnimatePresence>
+            {navOpen && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="mt-4 flex flex-col gap-3 sm:hidden"
               >
-                Tentang KTM
-              </a>
-              <a
-                href="https://www.instagram.com/p/DH-9ucSBeF-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
-                target="_blank"
-                rel="noreferrer"
-                className="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-center text-[12px] uppercase tracking-[2px] text-white transition hover:bg-pink-500 hover:text-black"
-              >
-                Gabung Sel
-              </a>
-              <button
-                type="button"
-                onClick={() => {
-                  setShowJerseyModal(true);
-                  setNavOpen(false);
-                }}
-                className="w-full rounded-full bg-pink-500 px-4 py-3 text-[12px] font-semibold uppercase tracking-[2px] text-black transition hover:bg-pink-600"
-              >
-                Beli Jersey KTM
-              </button>
-            </div>
-          )}
+                <a
+                  href="https://www.holytrinitycarmel.com/#0"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-center text-[12px] uppercase tracking-[2px] text-white transition hover:bg-pink-500 hover:text-black"
+                >
+                  Tentang KTM
+                </a>
+                <a
+                  href="https://www.instagram.com/p/DH-9ucSBeF-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+                  target="_blank"
+                  rel="noreferrer"
+                  className="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-center text-[12px] uppercase tracking-[2px] text-white transition hover:bg-pink-500 hover:text-black"
+                >
+                  Gabung Sel
+                </a>
+                <button
+                  type="button"
+                  onClick={() => {
+                    setShowJerseyModal(true);
+                    setNavOpen(false);
+                  }}
+                  className="w-full rounded-full bg-pink-500 px-4 py-3 text-[12px] font-semibold uppercase tracking-[2px] text-black transition hover:bg-pink-600"
+                >
+                  Beli Jersey KTM
+                </button>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </header>
 
         <EventBanner />

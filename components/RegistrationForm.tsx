@@ -283,9 +283,13 @@ export default function RegistrationForm() {
                 placeholder="08xxxxxxxxxx"
                 {...register("telepon", {
                   required: "Wajib diisi",
-                  pattern: {
-                    value: /^(\+62|62|0)[0-9]{8,13}$/,
-                    message: "Format nomor tidak valid",
+                  validate: (value) => {
+                    const digits = value.replace(/\D/g, "");
+                    if (!digits) return "Wajib diisi";
+                    if (!/^08[1-9][0-9]{6,10}$/.test(digits)) {
+                      return "Format nomor telepon tidak valid";
+                    }
+                    return true;
                   },
                 })}
               />

@@ -36,10 +36,18 @@ export async function submitRegistration(data: FormData): Promise<Result> {
     const currentRegistered = Number(countData.registered || 0);
     const playerNumber = generatePlayerNumber(currentRegistered);
 
+    const sanitizePhone = (value: string) => {
+      const digits = value.replace(/\D/g, "");
+      if (digits.startsWith("0")) {
+        return `'${digits}`;
+      }
+      return digits;
+    };
+
     const fd = new FormData();
     fd.append("nama", `${data.firstName} ${data.lastName}`);
     fd.append("email", data.email);
-    fd.append("telepon", data.telepon);
+    fd.append("telepon", sanitizePhone(data.telepon));
     fd.append("umur", data.umur);
     fd.append("domisili", data.domisili);
     fd.append("anggota", data.anggota);
