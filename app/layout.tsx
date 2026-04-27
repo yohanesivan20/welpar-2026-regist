@@ -3,9 +3,11 @@ import "./globals.css";
 import { Toaster } from "react-hot-toast";
 import MusicProvider from "@/components/MusicProvider";
 
+const maxSlots = process.env.NEXT_PUBLIC_MAX_SLOTS || "156";
+
 export const metadata: Metadata = {
   title: "Stay Sane or Fall Apart — Event Registration",
-  description: "Daftarkan dirimu. 456 slot tersedia. Siapa yang bertahan?",
+  description: `Daftarkan dirimu. ${maxSlots} slot tersedia. Siapa yang bertahan?`,
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
