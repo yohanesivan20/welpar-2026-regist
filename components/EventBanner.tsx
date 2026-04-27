@@ -165,7 +165,7 @@ export default function EventBanner() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="font-['Black_Han_Sans'] min-h-32 text-5xl leading-none tracking-tight mb-2 text-cyan-400 sm:min-h-36">
+        className="font-['Black_Han_Sans'] min-h-32 text-5xl leading-none tracking-tight mt-4 mb-2 text-cyan-400 sm:min-h-36">
         {renderTitle()}
         <span
           className={`inline-block w-px h-[1.8rem] bg-white ml-2 transition-opacity ${
@@ -175,13 +175,13 @@ export default function EventBanner() {
       </motion.h1>
 
       {/* Tagline */}
-      <motion.p
+      {/* <motion.p
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.3, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="text-[11px] tracking-[4px] text-neutral-300 uppercase font-light mb-6">
         BERSAMA YESUS, SALING RAWAT, SALING KUAT
-      </motion.p>
+      </motion.p> */}
 
       {/* Divider */}
       <motion.div

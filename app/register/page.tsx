@@ -27,7 +27,7 @@ export default function RegisterPage() {
           <RegistrationForm />
         </div>
       </div>
-      <footer className="mt-auto py-8 text-[11px] text-neutral-300 tracking-[2px] text-center relative z-10">
+      <footer className="mt-auto py-8 text-[11px] text-neutral-800 tracking-[2px] text-center relative z-10">
         <div className="mb-3 text-sm text-neutral-400">
           Follow kami: 
           <a
