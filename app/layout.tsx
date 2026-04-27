@@ -8,6 +8,9 @@ const maxSlots = process.env.NEXT_PUBLIC_MAX_SLOTS || "156";
 export const metadata: Metadata = {
   title: "Stay Sane or Fall Apart — Event Registration",
   description: `Daftarkan dirimu. ${maxSlots} slot tersedia. Siapa yang bertahan?`,
+  icons: {
+    icon: "/images/logo/ktm-logo-compressed.png",
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
