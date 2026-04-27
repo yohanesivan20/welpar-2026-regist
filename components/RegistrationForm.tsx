@@ -28,6 +28,7 @@ type FormData = {
   informan: string;
   camping: string;
   agreeTerms: boolean;
+  playerNumber?: string;
 };
 
 const inputClass =
@@ -116,7 +117,7 @@ function FormSelect({
 export default function RegistrationForm() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [success, setSuccess] = useState(false);
-  const [playerNum, setPlayerNum] = useState("");
+  const [playerNumber, setPlayerNumber] = useState("");
 
   const {
     register,
@@ -128,10 +129,11 @@ export default function RegistrationForm() {
 
   const onSubmit = async (data: FormData) => {
     setIsSubmitting(true);
+
     try {
       const res = await submitRegistration(data);
       if (res.success) {
-        setPlayerNum(res.playerNumber || "???");
+        setPlayerNumber(res.playerNumber || "000");
         setSuccess(true);
         reset();
         toast.success("Pendaftaran berhasil! Selamat datang di arena.");
@@ -180,22 +182,27 @@ export default function RegistrationForm() {
             animate={{ scale: 1, opacity: 1 }}
             transition={{ type: "spring", stiffness: 200 }}
           >
-            #{playerNum}
+            #{playerNumber}
           </motion.p>
-          <h2 className="font-['Black_Han_Sans'] text-xl sm:text-2xl mb-3">
+          <h2 className="font-['Black_Han_Sans'] text-neutral-300 text-xl sm:text-2xl mb-3">
             Kamu Sudah Terdaftar
           </h2>
-          <p className="text-[13px] text-neutral-400 leading-relaxed max-w-xs mx-auto mb-8">
-            Konfirmasi dikirim ke email kamu. Bersiaplah untuk arena. Hanya
-            yang kuat yang bertahan.
-          </p>
-          <Button
-            variant="outline"
-            className="border-neutral-800 text-neutral-400 hover:border-pink-500 hover:text-pink-500 bg-transparent text-[11px] tracking-[3px] uppercase"
-            onClick={() => setSuccess(false)}
-          >
-            Daftarkan Peserta Lain
-          </Button>
+          <div className="flex w-full max-w-xs flex-col gap-3 mx-auto mb-6">
+            <a
+              href=""
+              className="inline-flex w-full items-center justify-center rounded-full border border-pink-500 bg-pink-500/10 px-5 py-3 text-sm font-semibold uppercase tracking-[2px] text-pink-500 transition hover:bg-pink-500 hover:text-black"
+              aria-label="Gabung grup WhatsApp"
+            >
+              Gabung ke WhatsApp Group
+            </a>
+            <Button
+              variant="outline"
+              className="w-full border-neutral-800 text-neutral-400 hover:border-pink-500 hover:text-pink-500 bg-transparent text-[11px] tracking-[3px] uppercase"
+              onClick={() => setSuccess(false)}
+            >
+              Daftarkan Peserta Lain
+            </Button>
+          </div>
         </motion.div>
       ) : (
         /* ===== FORM STATE ===== */
