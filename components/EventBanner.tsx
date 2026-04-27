@@ -165,10 +165,10 @@ export default function EventBanner() {
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="font-['Black_Han_Sans'] min-h-[6.5rem] text-5xl leading-none tracking-tight mb-2 text-cyan-400 sm:min-h-[7.5rem]">
+        className="font-['Black_Han_Sans'] min-h-32 text-5xl leading-none tracking-tight mb-2 text-cyan-400 sm:min-h-36">
         {renderTitle()}
         <span
-          className={`inline-block w-[1px] h-[1.8rem] bg-white ml-2 transition-opacity ${
+          className={`inline-block w-px h-[1.8rem] bg-white ml-2 transition-opacity ${
             showCursor ? "opacity-100" : "opacity-0"
           }`}
         />
@@ -223,7 +223,7 @@ export default function EventBanner() {
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.6, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
         className="flex items-center gap-3">
-        <div className="flex-1 h-[3px] bg-neutral-900 rounded-full overflow-hidden">
+        <div className="flex-1 h-0.75 bg-neutral-900 rounded-full overflow-hidden">
           <motion.div
             className="h-full bg-linear-to-r from-pink-600 to-pink-400 rounded-full"
             initial={{ width: 0 }}
