@@ -124,12 +124,17 @@ This guarantees:
 
 ---
 
-## 📸 UI Highlights
+## 📸 Screenshots
 
-* Animated hero section
-* Interactive event carousel
-* Clean and minimal registration form
-* Responsive design for all devices
+<p align="center">
+  <img src="https://github.com/user-attachments/assets/f5a522e2-dd48-4528-87e5-84bc01955e38" width="48%" style="border-radius:12px;" />
+  <img src="https://github.com/user-attachments/assets/75c7944f-c24c-4885-8423-d9f0ec1c1bdd" width="48%" style="border-radius:12px;" />
+</p>
+
+<p align="center">
+ <img src="https://github.com/user-attachments/assets/61622215-82c4-479a-bba1-0f8d5ac5adec" width="48%" style="border-radius:12px;" />
+ <img src="https://github.com/user-attachments/assets/504584aa-4475-4a21-bde1-6849b1279517" width="48%" style="border-radius:12px;" />
+</p>
 
 ---
 
