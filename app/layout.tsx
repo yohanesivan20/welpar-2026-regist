@@ -19,16 +19,27 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
       <body>
         <MusicProvider>{children}</MusicProvider>
         <Toaster
-          position="top-center"
+          position="bottom-center"
           toastOptions={{
             style: {
               background: "#111",
               color: "#fff",
-              border: "1px solid #E53935",
-              fontFamily: "'Noto Sans KR', sans-serif",
+              border: "1px solid #222",
             },
-            success: { iconTheme: { primary: "#E53935", secondary: "#fff" } },
-            error: { iconTheme: { primary: "#E53935", secondary: "#fff" } },
+
+            success: {
+              iconTheme: {
+                primary: "#22c55e",
+                secondary: "#111",
+              },
+            },
+
+            error: {
+              iconTheme: {
+                primary: "#ec4899",
+                secondary: "#111",
+              },
+            },
           }}
         />
       </body>
