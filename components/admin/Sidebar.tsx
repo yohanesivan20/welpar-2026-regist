@@ -51,21 +51,6 @@ export default function Sidebar() {
           );
         })}
       </nav>
-
-      <div className="absolute bottom-0 w-64 p-4 border-t border-[#222]">
-        <button
-          className="
-            w-full flex items-center gap-3
-            px-4 py-3 rounded-lg
-            hover:bg-red-500/10
-            hover:text-red-500
-            transition
-          "
-        >
-          <LogOut size={18} />
-          Logout
-        </button>
-      </div>
     </aside>
   );
 }

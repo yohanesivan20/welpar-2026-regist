@@ -1,87 +1,338 @@
 "use client";
 
-import { useState } from "react";
-import { Input } from "@/components/ui/input";
-import { Button } from "@/components/ui/button";
-import { Lock, Mail } from "lucide-react";
+import {
+  useState,
+} from "react";
+
+import {
+  useRouter,
+} from "next/navigation";
+
+import toast from "react-hot-toast";
+
+import {
+  Lock,
+  Loader2,
+} from "lucide-react";
 
 export default function LoginPage() {
-  const [loading, setLoading] = useState(false);
 
-  const handleLogin = async (
+  const router =
+    useRouter();
+
+  const [email, setEmail] =
+    useState("");
+
+  const [
+    password,
+    setPassword,
+  ] = useState("");
+
+  const [loading, setLoading] =
+    useState(false);
+
+  const handleLogin =
+  async (
     e: React.FormEvent
   ) => {
+
     e.preventDefault();
+
+    // =========================
+    // VALIDATION
+    // =========================
+
+    if (
+      !email.trim() ||
+      !password.trim()
+    ) {
+
+      toast.error(
+        "Email dan password wajib diisi"
+      );
+
+      return;
+    }
 
     setLoading(true);
 
-    setTimeout(() => {
-      window.location.href =
-        "/admin/dashboard";
-    }, 1000);
+    try {
+
+      const res =
+        await fetch(
+          "/api/login",
+          {
+            method: "POST",
+            credentials: "same-origin",
+
+            headers: {
+              "Content-Type":
+                "application/json",
+            },
+
+            body: JSON.stringify({
+              email: email.trim(),
+              password: password.trim(),
+            }),
+          }
+        );
+
+      if (!res.ok) {
+
+        const result =
+          await res.json();
+
+        toast.error(
+          result.message ||
+          "Login gagal"
+        );
+
+        return;
+      }
+
+      const result =
+        await res.json();
+
+      if (!result.success) {
+
+        toast.error(
+          result.message ||
+          "Login gagal"
+        );
+
+        return;
+      }
+
+      toast.success(
+        "Login berhasil"
+      );
+
+      // =========================
+      // REDIRECT TO PROTECTED
+      // =========================
+
+      router.push(
+        "/admin/participants"
+      );
+
+      router.refresh();
+
+    } catch (err) {
+
+      console.error(
+        "Login error:",
+        err
+      );
+
+      toast.error(
+        "Terjadi kesalahan. Coba lagi."
+      );
+
+    } finally {
+
+      setLoading(false);
+    }
   };
 
   return (
-    <div className="min-h-screen bg-black flex items-center justify-center px-4">
-      <div className="w-full max-w-md bg-[#111] border border-[#222] rounded-2xl p-8">
-        <h1 className="text-3xl font-bold text-center text-pink-500 mb-2">
+    <div className="
+      min-h-screen
+      flex
+      items-center
+      justify-center
+      bg-black
+      px-4
+    ">
+
+      <div className="
+        w-full
+        max-w-md
+        bg-[#111]
+        border
+        border-[#222]
+        rounded-3xl
+        p-8
+      ">
+
+        <div className="
+          flex
+          justify-center
+          mb-6
+        ">
+
+          <div className="
+            w-16
+            h-16
+            rounded-2xl
+            bg-pink-500/10
+            flex
+            items-center
+            justify-center
+          ">
+            <Lock
+              size={30}
+              className="
+                text-pink-500
+              "
+            />
+          </div>
+        </div>
+
+        <h1 className="
+          text-3xl
+          font-bold
+          text-center
+          mb-2
+          text-neutral-400
+        ">
           Admin Login
         </h1>
 
-        <p className="text-center text-neutral-400 text-sm mb-8">
-          Login untuk mengakses dashboard
+        <p className="
+          text-neutral-400
+          text-center
+          mb-8
+        ">
+          Faith Game Dashboard
         </p>
 
         <form
           onSubmit={handleLogin}
           className="space-y-5"
         >
+
           <div>
-            <label className="text-sm mb-2 block">
+            <label
+              htmlFor="email"
+              className="
+              text-sm
+              text-neutral-400
+              mb-2
+              block
+            ">
               Email
             </label>
 
-            <div className="relative">
-              <Mail
-                size={18}
-                className="absolute left-3 top-3 text-neutral-500"
-              />
+            <input
+              id="email"
+              type="email"
 
-              <Input
-                type="email"
-                placeholder="admin@email.com"
-                className="pl-10 bg-black border-[#222]"
-              />
-            </div>
+              value={email}
+
+              onChange={(e) =>
+                setEmail(
+                  e.target.value
+                )
+              }
+
+              disabled={loading}
+
+              className="
+                w-full
+                bg-black
+                border
+                border-[#222]
+                text-neutral-500
+                rounded-xl
+                px-4
+                py-3
+                outline-none
+                focus:border-pink-500
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+                transition
+              "
+
+              placeholder="email@gmail.com"
+            />
           </div>
 
           <div>
-            <label className="text-sm mb-2 block">
+            <label
+              htmlFor="password"
+              className="
+              text-sm
+              text-neutral-400
+              mb-2
+              block
+            ">
               Password
             </label>
 
-            <div className="relative">
-              <Lock
-                size={18}
-                className="absolute left-3 top-3 text-neutral-500"
-              />
+            <input
+              id="password"
+              type="password"
 
-              <Input
-                type="password"
-                placeholder="********"
-                className="pl-10 bg-black border-[#222]"
-              />
-            </div>
+              value={password}
+
+              onChange={(e) =>
+                setPassword(
+                  e.target.value
+                )
+              }
+
+              disabled={loading}
+
+              className="
+                w-full
+                bg-black
+                border
+                border-[#222]
+                text-neutral-500
+                rounded-xl
+                px-4
+                py-3
+                outline-none
+                focus:border-pink-500
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+                transition
+              "
+
+              placeholder="********"
+            />
           </div>
 
-          <Button
+          <button
+            type="submit"
+
             disabled={loading}
-            className="w-full bg-pink-500 hover:bg-pink-600"
+
+            className="
+              w-full
+              bg-pink-500
+              hover:bg-pink-600
+              disabled:bg-pink-500/50
+              disabled:cursor-not-allowed
+              rounded-xl
+              py-3
+              font-semibold
+              transition
+              flex
+              items-center
+              justify-center
+              gap-2
+            "
           >
-            {loading
-              ? "Loading..."
-              : "Login"}
-          </Button>
+
+            {loading ? (
+              <>
+                <Loader2
+                  size={18}
+                  className="
+                    animate-spin
+                  "
+                />
+                <span>
+                  Loading...
+                </span>
+              </>
+            ) : (
+              "Login"
+            )}
+
+          </button>
+
         </form>
       </div>
     </div>

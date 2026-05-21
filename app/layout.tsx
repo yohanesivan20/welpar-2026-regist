@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import { Toaster } from "react-hot-toast";
-import MusicProvider from "@/components/MusicProvider";
+import ConditionalMusicProvider from "@/components/ConditionalMusicProvider";
 
 const maxSlots = process.env.NEXT_PUBLIC_MAX_SLOTS || "156";
 
@@ -17,7 +17,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="id" data-scroll-behavior="smooth">
       <body>
-        <MusicProvider>{children}</MusicProvider>
+        <ConditionalMusicProvider>{children}</ConditionalMusicProvider>
         <Toaster
           position="bottom-center"
           toastOptions={{
