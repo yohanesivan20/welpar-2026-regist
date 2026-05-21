@@ -6,6 +6,7 @@ import {
   LayoutDashboard,
   Users,
   LogOut,
+  Watch,
 } from "lucide-react";
 
 const menus = [
@@ -19,6 +20,11 @@ const menus = [
     href: "/admin/participants",
     icon: Users,
   },
+  {
+    name: "Regist Site",
+    href: "/",
+    icon: Watch,
+  }
 ];
 
 export default function Sidebar() {

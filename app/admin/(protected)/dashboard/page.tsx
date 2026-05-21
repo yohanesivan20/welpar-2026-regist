@@ -62,7 +62,7 @@ export default function DashboardPage() {
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
-          <p className="text-neutral-400">Monitor registrasi event</p>
+          <p className="text-neutral-400">Monitor Registrasi Faith Game B2B 2026</p>
         </div>
         <div className="flex items-center gap-2 text-xs text-neutral-500 mt-1">
           <span className="relative flex h-2 w-2">
