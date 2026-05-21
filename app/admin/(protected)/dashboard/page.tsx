@@ -2,9 +2,18 @@
 
 import { useEffect, useState, useCallback } from "react";
 import { Users, UserCheck, Clock, Loader2 } from "lucide-react";
+import DomisiliChart from "@/components/admin/charts/DomisiliChart";
+import MembershipChart from "@/components/admin/charts/MembershipChart";
+
+type Participant = {
+  Nama: string;
+  Domisili: string;
+  Anggota: string;
+  Status: string;
+};
 
 export default function DashboardPage() {
-  const [stats, setStats] = useState<any[]>([]);
+  const [stats, setStats] = useState<Participant[]>([]);
   const [loading, setLoading] = useState(true);
   const [lastUpdated, setLastUpdated] = useState<Date | null>(null);
 
@@ -27,40 +36,16 @@ export default function DashboardPage() {
     return () => clearInterval(interval);
   }, [fetchStats]);
 
-  // =========================
-  // COMPUTE STATS
-  // =========================
-
   const total = stats.length;
-
-  const totalCheckIn = stats.filter(
-    (p: any) => p.Status === "Hadir"
-  ).length;
-
+  const totalCheckIn = stats.filter((p) => p.Status === "Hadir").length;
   const totalCheckInPercentage =
     total > 0 ? Math.round((totalCheckIn / total) * 100) : 0;
 
   const cards = [
-    {
-      title: "Total Peserta",
-      value: total,
-      icon: Users,
-    },
-    {
-      title: "Sudah Hadir",
-      value: totalCheckIn,
-      icon: UserCheck,
-    },
-    {
-      title: "Persentase Kehadiran",
-      value: `${totalCheckInPercentage}%`,
-      icon: Clock,
-    },
+    { title: "Total Peserta", value: total, icon: Users },
+    { title: "Sudah Hadir", value: totalCheckIn, icon: UserCheck },
+    { title: "Persentase Kehadiran", value: `${totalCheckInPercentage}%`, icon: Clock },
   ];
-
-  // =========================
-  // LOADING STATE
-  // =========================
 
   if (loading) {
     return (
@@ -71,19 +56,14 @@ export default function DashboardPage() {
     );
   }
 
-  // =========================
-  // UI
-  // =========================
-
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-start justify-between">
         <div>
           <h1 className="text-3xl font-bold">Dashboard</h1>
           <p className="text-neutral-400">Monitor registrasi event</p>
         </div>
-
-        {/* ✅ Live indicator */}
         <div className="flex items-center gap-2 text-xs text-neutral-500 mt-1">
           <span className="relative flex h-2 w-2">
             <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
@@ -95,10 +75,10 @@ export default function DashboardPage() {
         </div>
       </div>
 
+      {/* Stats Cards */}
       <div className="grid md:grid-cols-3 gap-5">
         {cards.map((item) => {
           const Icon = item.icon;
-
           return (
             <div
               key={item.title}
@@ -109,7 +89,6 @@ export default function DashboardPage() {
                   <p className="text-neutral-400 text-sm">{item.title}</p>
                   <h2 className="text-4xl font-bold mt-2">{item.value}</h2>
                 </div>
-
                 <div className="w-14 h-14 rounded-xl bg-pink-500/10 flex items-center justify-center">
                   <Icon size={28} className="text-pink-500" />
                 </div>
@@ -117,6 +96,12 @@ export default function DashboardPage() {
             </div>
           );
         })}
+      </div>
+
+      {/* ✅ Charts — responsive 2 col desktop, 1 col mobile */}
+      <div className="grid md:grid-cols-2 gap-5">
+        <DomisiliChart data={stats} isLoading={loading} />
+        <MembershipChart data={stats} isLoading={loading} />
       </div>
     </div>
   );
