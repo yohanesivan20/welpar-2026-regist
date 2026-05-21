@@ -10,6 +10,8 @@ import {
   LogOut,
 } from "lucide-react";
 
+import Image from "next/image";
+
 export default function Navbar() {
 
   const router =
@@ -91,7 +93,7 @@ export default function Navbar() {
           font-semibold
           text-lg
         ">
-          Event Dashboard
+          Faith Game KTM Muda Mudi Jakarta - Event Management
         </h2>
       </div>
 
@@ -115,7 +117,14 @@ export default function Navbar() {
           justify-center
           font-bold
         ">
-          A
+          <Image
+            src="/images/logo/ktm-logo-compressed.png"
+            alt="KTM Logo"
+            width={40}
+            height={40}
+            className="object-cover"
+          />
+
         </div>
 
         {/* LOGOUT BUTTON */}

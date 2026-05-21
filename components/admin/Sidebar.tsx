@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import {
   LayoutDashboard,
@@ -23,10 +24,8 @@ const menus = [
 export default function Sidebar() {
   return (
     <aside className="w-64 border-r border-[#222] bg-[#111]">
-      <div className="h-16 flex items-center px-6 border-b border-[#222]">
-        <h1 className="font-bold tracking-widest text-pink-500">
-          WELPAR ADMIN
-        </h1>
+      <div className="h-16 flex items-center justify-center px-6 border-b border-[#222]">
+        <Image src="/images/logo/Faith Game - White - Horizontal.png" alt="KTM Logo" width={160} height={40} className="object-cover" />
       </div>
 
       <nav className="p-4 flex flex-col gap-2">
