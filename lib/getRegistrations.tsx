@@ -6,7 +6,7 @@ export async function getRegistrations() {
   }
 
   const res = await fetch(url!, {
-    cache: "no-store",
+    next: { revalidate: 30 },
   });
 
   const result = await res.json();

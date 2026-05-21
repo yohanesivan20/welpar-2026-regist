@@ -207,6 +207,15 @@ export default function ParticipantsTable({
       debouncedSearch,
     ]);
 
+  const filteredCheckInCount =
+    useMemo(
+      () =>
+        filteredData.filter(
+          (p) => p.Status === "Hadir"
+        ).length,
+      [filteredData]
+    );
+
   // =========================
   // COLUMNS
   // =========================
@@ -400,7 +409,7 @@ export default function ParticipantsTable({
         ">
           Hadir:
           {" "}
-          {filteredData.filter((p) => p.Status === "Hadir").length}
+          {filteredCheckInCount}
           {" "}
           peserta
         </div>
@@ -413,7 +422,7 @@ export default function ParticipantsTable({
           {" "}
           {filteredData.length > 0
             ? Math.round(
-                (filteredData.filter((p) => p.Status === "Hadir").length / filteredData.length) * 100
+                (filteredCheckInCount / filteredData.length) * 100
               )
             : 0}
           {" "}
