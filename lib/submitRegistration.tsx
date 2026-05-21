@@ -17,51 +17,57 @@ type Result = { success: boolean; message?: string; playerNumber?: string };
 export async function submitRegistration(data: FormData): Promise<Result> {
   const url = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL;
 
-  const generatePlayerNumber = (count: number) => {
-    return String(count + 1).padStart(3, "0");
-  };
-
   if (!url || url.includes("YOUR_SCRIPT_ID")) {
-    await new Promise((r) => setTimeout(r, 1500));
-    const fallbackNumber = generatePlayerNumber(0);
     return {
       success: true,
-      playerNumber: fallbackNumber,
+      playerNumber: "001",
     };
   }
 
-  try {
-    const countResponse = await fetch(url);
-    const countData = await countResponse.json();
-    const currentRegistered = Number(countData.registered || 0);
-    const playerNumber = generatePlayerNumber(currentRegistered);
+  const sanitizePhone = (value: string) => {
+    const digits = value.replace(/\D/g, "");
+    // Prefix ' agar Google Sheets tidak konversi ke angka
+    return digits.startsWith("0") ? `'${digits}` : digits;
+  };
 
-    const sanitizePhone = (value: string) => {
-      const digits = value.replace(/\D/g, "");
-      if (digits.startsWith("0")) {
-        return `'${digits}`;
-      }
-      return digits;
+  try {
+    const payload = {
+      source: "faith-game-web",       // ✅ Wajib ada untuk lolos validasi
+      nama: `${data.firstName} ${data.lastName}`,
+      email: data.email,
+      telepon: sanitizePhone(data.telepon),
+      umur: data.umur,
+      domisili: data.domisili,
+      anggota: data.anggota,
+      informan: data.informan,
+      camping: data.camping,
     };
 
-    const fd = new FormData();
-    fd.append("nama", `${data.firstName} ${data.lastName}`);
-    fd.append("email", data.email);
-    fd.append("telepon", sanitizePhone(data.telepon));
-    fd.append("umur", data.umur);
-    fd.append("domisili", data.domisili);
-    fd.append("anggota", data.anggota);
-    fd.append("informan", data.informan);
-    fd.append("camping", data.camping);
-    fd.append("timestamp", new Date().toISOString());
-    fd.append("playerNumber", playerNumber);
+    // ✅ Kirim sebagai JSON agar Apps Script bisa JSON.parse(e.postData.contents)
+    const response = await fetch(url, {
+      method: "POST",
+      // ✅ Hapus mode: "no-cors" agar response bisa dibaca
+      headers: { "Content-Type": "text/plain;charset=utf-8" },
+      body: JSON.stringify(payload),
+    });
 
-    await fetch(url, { method: "POST", body: fd, mode: "no-cors" });
+    const result = await response.json();
+
+    if (result.success) {
+      // Ambil player number dari registrationId yang dikembalikan Apps Script
+      // Format: "B2B-001" → ambil bagian angkanya
+      const playerNumber = result.registrationId
+        ? result.registrationId.split("-")[1]
+        : "000";
+
+      return { success: true, playerNumber };
+    }
 
     return {
-      success: true,
-      playerNumber,
+      success: false,
+      message: result.message || "Pendaftaran gagal.",
     };
+
   } catch {
     return { success: false, message: "Gagal mengirim. Coba lagi." };
   }

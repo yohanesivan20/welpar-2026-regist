@@ -121,11 +121,6 @@ export default function ParticipantsTable({
       const result =
         await res.json();
 
-      console.log(
-        "Attendance Result:",
-        result
-      );
-
       // =========================
       // HANDLE FAILED RESPONSE
       // =========================
@@ -184,28 +179,21 @@ export default function ParticipantsTable({
   // FILTERED DATA
   // =========================
 
-  const filteredData =
-    useMemo(() => {
-
-      return participants.filter(
-        (p) =>
-          [
-            p.Nama,
-            p.Telepon,
-            p.Domisili,
-            p.Anggota,
-          ]
-            .join(" ")
-            .toLowerCase()
-            .includes(
-              debouncedSearch.toLowerCase()
-            )
-      );
-
-    }, [
-      participants,
-      debouncedSearch,
-    ]);
+  const filteredData = useMemo(() => {
+    return participants
+      .filter((p) =>
+        [p.Nama, p.Telepon, p.Domisili, p.Anggota]
+          .join(" ")
+          .toLowerCase()
+          .includes(debouncedSearch.toLowerCase())
+      )
+      // ✅ Tambahkan ini — yang sudah Hadir ke bawah
+      .sort((a, b) => {
+        const aHadir = a.Status === "Hadir" ? 1 : 0;
+        const bHadir = b.Status === "Hadir" ? 1 : 0;
+        return aHadir - bHadir;
+      });
+  }, [participants, debouncedSearch]);
 
   const filteredCheckInCount =
     useMemo(
@@ -353,7 +341,7 @@ export default function ParticipantsTable({
 
       initialState: {
         pagination: {
-          pageSize: 10,
+          pageSize: 4,
         },
       },
 
