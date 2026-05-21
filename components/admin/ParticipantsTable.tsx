@@ -19,6 +19,8 @@ import {
 import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { ageConvert } from "@/lib/ageConvert";
+import ExportDropdown from "@/components/admin/ExportDropdown";
+import type { Participant } from "@/lib/exportParticipants";
 
 const columnHelper =
   createColumnHelper<any>();
@@ -35,6 +37,10 @@ export default function ParticipantsTable({
 
   const [participants, setParticipants] =
     useState(data);
+
+  useEffect(() => {
+    setParticipants(data);
+  }, [data]);
 
   const [search, setSearch] =
     useState("");
@@ -195,14 +201,12 @@ export default function ParticipantsTable({
       });
   }, [participants, debouncedSearch]);
 
-  const filteredCheckInCount =
-    useMemo(
-      () =>
-        filteredData.filter(
-          (p) => p.Status === "Hadir"
-        ).length,
-      [filteredData]
-    );
+  const totalCount = participants.length;
+
+  const checkInCount = useMemo(
+    () => participants.filter((p) => p.Status === "Hadir").length,
+    [participants]
+  );
 
   // =========================
   // COLUMNS
@@ -369,83 +373,56 @@ export default function ParticipantsTable({
       overflow-hidden
     ">
 
-      {/* SEARCH */}
-
-      <div className="
-        p-4
-        border-b
-        border-[#222]
-        flex
-        justify-between
-        items-center
-      ">
-
+      {/* TOOLBAR */}
         <div className="
-          text-sm
-          text-neutral-400
+          p-4 border-b border-[#222]
+          flex flex-wrap gap-3
+          justify-between items-center
         ">
-          Total:
-          {" "}
-          {filteredData.length}
-          {" "}
-          peserta
+          {/* Kiri — Stats */}
+          <div className="flex items-center gap-5">
+            <div className="text-sm text-neutral-400">
+              Total{" "}
+              <span className="text-white font-semibold">{totalCount}</span>{" "}
+              peserta
+            </div>
+
+            <div className="w-px h-4 bg-[#2a2a2a]" />
+
+            <div className="text-sm text-neutral-400">
+              Hadir{" "}
+              <span className="text-white font-semibold">{checkInCount}</span>
+            </div>
+
+            <div className="w-px h-4 bg-[#2a2a2a]" />
+
+            <div className="text-sm text-neutral-400">
+              <span className="text-white font-semibold">
+                {totalCount > 0
+                  ? Math.round((checkInCount / totalCount) * 100)
+                  : 0}%
+              </span>{" "}
+              hadir
+            </div>
+          </div>
+
+          {/* Kanan — Export + Search */}
+          <div className="flex items-center gap-3">
+            <ExportDropdown data={participants as Participant[]} />
+
+            <input
+              type="text"
+              placeholder="Search participant..."
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+              className="
+                bg-black border border-[#222] rounded-lg
+                px-4 py-2 text-sm w-64 outline-none
+                focus:border-pink-500 transition-colors
+              "
+            />
+          </div>
         </div>
-
-        <div className="
-          text-sm
-          text-neutral-400
-        ">
-          Hadir:
-          {" "}
-          {filteredCheckInCount}
-          {" "}
-          peserta
-        </div>
-
-        <div className="
-          text-sm
-          text-neutral-400
-        ">
-          Persentase:
-          {" "}
-          {filteredData.length > 0
-            ? Math.round(
-                (filteredCheckInCount / filteredData.length) * 100
-              )
-            : 0}
-          {" "}
-          %
-        </div>
-
-        <input
-          type="text"
-
-          placeholder="
-            Search participant...
-          "
-
-          value={search}
-
-          onChange={(e) =>
-            setSearch(
-              e.target.value
-            )
-          }
-
-          className="
-            bg-black
-            border
-            border-[#222]
-            rounded-lg
-            px-4
-            py-2
-            text-sm
-            w-72
-            outline-none
-            focus:border-pink-500
-          "
-        />
-      </div>
 
       {/* TABLE */}
 
