@@ -4,10 +4,12 @@ import { useEffect, useState } from "react";
 import { Calendar, ChevronDown, MapPin, Play, Pause, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useMusic } from "@/components/MusicProvider";
+import { useRouter } from "next/navigation";
 
 const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || "";
 
 export default function EventBanner() {
+  const router = useRouter();
   const [registered, setRegistered] = useState(0);
   const [loading, setLoading] = useState(true);
   const [typedTitle, setTypedTitle] = useState("");
@@ -235,6 +237,33 @@ export default function EventBanner() {
           {loading ? "Loading..." : `${pct}% slot terisi`}
         </span>
       </motion.div>
+      {/* Shuttlecock — mobile only */}
+      <motion.button
+        onClick={() => router.push("/badminton-info")}
+        aria-label="Info turnamen badminton"
+        className="md:hidden absolute top-1/2 -translate-y-1/2 -right-6 z-50 cursor-pointer flex flex-col items-center gap-2"
+        animate={{ y: [0, -12, 0] }}
+        transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
+        whileHover={{ scale: 1.15 }}
+        whileTap={{ scale: 0.95 }}
+      >
+        <div className="relative">
+          <div className="absolute inset-0 rounded-full bg-pink-500/20 blur-lg scale-150" />
+          <img
+            src="/images/shuttlecock.png"
+            alt="shuttlecock"
+            className="relative w-16 h-16 object-contain drop-shadow-lg"
+          />
+        </div>
+        <div className="flex flex-col items-center">
+          <span className="text-[14px] tracking-[2px] text-pink-400 uppercase font-semibold whitespace-nowrap">
+            Turnamen
+          </span>
+          <span className="text-[10px] text-neutral-500 tracking-wide whitespace-nowrap">
+            Tap untuk info
+          </span>
+        </div>
+      </motion.button>
     </motion.section>
   );
 }

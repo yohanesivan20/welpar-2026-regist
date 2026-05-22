@@ -6,7 +6,7 @@ export default function ShapesBackground() {
   const router = useRouter();
 
   return (
-    <div className="fixed inset-0 overflow-hidden z-0" aria-hidden>
+    <div className="fixed inset-0 pointer-events-none overflow-hidden z-0" aria-hidden>
       {/* Circle top right */}
       <motion.div
         className="absolute w-72 h-72 rounded-full border border-[rgba(237,27,118,0.25)] top-[-80px] right-[-60px] pointer-events-none"
@@ -41,11 +41,11 @@ export default function ShapesBackground() {
         transition={{ duration: 8, repeat: Infinity, ease: [0.25, 0.1, 0.25, 1] }}
       />
 
-      {/* Shuttlecock */}
+      {/* Shuttlecock — desktop only */}
       <motion.button
         onClick={() => router.push("/badminton-info")}
         aria-label="Info turnamen badminton"
-        className="absolute top-14 right-10 z-10 cursor-pointer flex flex-col items-center gap-2"
+        className="hidden md:flex absolute top-14 right-10 z-50 cursor-pointer flex-col items-center gap-2"
         animate={{ y: [0, -12, 0] }}
         transition={{ duration: 3.5, repeat: Infinity, ease: "easeInOut" }}
         whileHover={{ scale: 1.15 }}
@@ -59,7 +59,6 @@ export default function ShapesBackground() {
             className="relative w-16 h-16 object-contain drop-shadow-lg"
           />
         </div>
-        {/* ✅ Label bawah */}
         <div className="flex flex-col items-center">
           <span className="text-[14px] tracking-[2px] text-pink-400 uppercase font-semibold">
             Turnamen
