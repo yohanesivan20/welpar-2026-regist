@@ -57,23 +57,6 @@ export default function BadmintonInfoPage() {
           Kembali
         </button>
 
-        {/* Header */}
-        <div className="mb-8">
-          {/* Shuttlecock icon */}
-          <div className="text-5xl mb-4">🏸</div>
-
-          <p className="text-[10px] tracking-[4px] text-neutral-500 uppercase mb-2">
-            Turnamen
-          </p>
-          <h1 className="font-['Black_Han_Sans'] text-4xl text-white leading-tight mb-2">
-            BADMINTON <br />
-            <span className="text-pink-500">FAITH GAME</span>
-          </h1>
-          <p className="text-neutral-500 text-sm">
-            Info lengkap pendaftaran turnamen badminton KTM Muda Mudi Jakarta 2026.
-          </p>
-        </div>
-
         {/* Divider */}
         <div className="flex items-center gap-3 mb-8 text-neutral-800 text-[10px]">
           <span>◯</span>

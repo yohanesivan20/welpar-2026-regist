@@ -8,6 +8,8 @@ import EventCarousel from "@/components/EventCarousel";
 import ShapesBackground from "@/components/ShapesBackground";
 
 export default function Home() {
+  const jerseyLink =
+  "https://www.instagram.com/p/DY6j2MKAQdy/?img_index=1";
   const [showJerseyModal, setShowJerseyModal] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
   return (
@@ -42,13 +44,13 @@ export default function Home() {
               <span>Menu</span>
               <span className="text-2xl leading-none">{navOpen ? "×" : "☰"}</span>
             </button>
-            <button
-              type="button"
-              onClick={() => setShowJerseyModal(true)}
+            <Link
+              href={jerseyLink}
+              target="_blank"
               className="hidden sm:inline-flex items-center justify-center rounded-full bg-pink-500 px-5 py-3 text-[12px] font-semibold uppercase tracking-[2px] text-black transition hover:bg-pink-600"
             >
               Beli Jersey KTM
-            </button>
+            </Link>
           </div>
           <AnimatePresence>
             {navOpen && (

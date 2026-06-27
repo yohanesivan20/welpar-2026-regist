@@ -42,7 +42,7 @@ export default function ShapesBackground() {
       />
 
       {/* Shuttlecock — desktop only */}
-      <motion.button
+      {/* <motion.button
         onClick={() => router.push("/badminton-info")}
         aria-label="Info turnamen badminton"
         className="hidden md:flex absolute top-14 right-10 z-50 cursor-pointer flex-col items-center gap-2"
@@ -67,7 +67,7 @@ export default function ShapesBackground() {
             Tap untuk info
           </span>
         </div>
-      </motion.button>
+      </motion.button> */}
     </div>
   );
 }

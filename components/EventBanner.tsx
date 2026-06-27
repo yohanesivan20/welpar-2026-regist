@@ -238,7 +238,7 @@ export default function EventBanner() {
         </span>
       </motion.div>
       {/* Shuttlecock — mobile only */}
-      <motion.button
+      {/* <motion.button
         onClick={() => router.push("/badminton-info")}
         aria-label="Info turnamen badminton"
         className="md:hidden absolute top-1/2 -translate-y-1/2 -right-6 z-50 cursor-pointer flex flex-col items-center gap-2"
@@ -263,7 +263,7 @@ export default function EventBanner() {
             Tap untuk info
           </span>
         </div>
-      </motion.button>
+      </motion.button> */}
     </motion.section>
   );
 }
