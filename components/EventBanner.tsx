@@ -121,7 +121,7 @@ export default function EventBanner() {
         className="relative w-full max-w-md mt-2 mb-2 aspect-[6.4/1] overflow-hidden"
       >
         <Image
-          src="/images/logo/IMG_7540.gif"
+          src="/images/logo/IMG_7540.GIF"
           alt="Faith Game"
           fill
           unoptimized
