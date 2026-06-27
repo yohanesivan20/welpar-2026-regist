@@ -1,6 +1,7 @@
 "use client";
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
+import Image from "next/image";
 import { Calendar, ChevronDown, MapPin, Play, Pause, Clock } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { useMusic } from "@/components/MusicProvider";
@@ -10,67 +11,7 @@ const GOOGLE_SCRIPT_URL = process.env.NEXT_PUBLIC_GOOGLE_SCRIPT_URL || "";
 export default function EventBanner() {
   const [registered, setRegistered] = useState(0);
   const [loading, setLoading] = useState(true);
-  const [typedTitle, setTypedTitle] = useState("");
-  const [showCursor, setShowCursor] = useState(true);
   const { playerReady, isPlaying, toggleMusic } = useMusic();
-
-  const fullTitle = "FAITH GAME";
-
-  useEffect(() => {
-    let typingTimer: number | undefined;
-    let restartTimer: number | undefined;
-
-    const startTyping = () => {
-      setTypedTitle("");
-      let index = 0;
-
-      if (typingTimer) {
-        window.clearInterval(typingTimer);
-      }
-
-      typingTimer = window.setInterval(() => {
-        index += 1;
-        setTypedTitle(fullTitle.slice(0, index));
-
-        if (index >= fullTitle.length && typingTimer) {
-          window.clearInterval(typingTimer);
-        }
-      }, 70);
-    };
-
-    startTyping();
-    restartTimer = window.setInterval(() => {
-      startTyping();
-    }, 10000);
-
-    return () => {
-      if (typingTimer) window.clearInterval(typingTimer);
-      if (restartTimer) window.clearInterval(restartTimer);
-    };
-  }, []);
-
-  useEffect(() => {
-    const cursorInterval = window.setInterval(() => {
-      setShowCursor((current) => !current);
-    }, 500);
-
-    return () => window.clearInterval(cursorInterval);
-  }, []);
-
-  // "FAITH" putih, "GAME" pink — berdasarkan urutan kata (index ke-1)
-  const renderTitle = () => {
-    const words = typedTitle.split(" ");
-
-    return words.map((word, index) => (
-      <span
-        key={index}
-        className={index === 1 ? "text-pink-500" : "text-white"}
-      >
-        {word}
-        {index < words.length - 1 ? " " : ""}
-      </span>
-    ));
-  };
 
   useEffect(() => {
     const fetchData = async () => {
@@ -172,19 +113,22 @@ export default function EventBanner() {
         <span className="text-pink-500">FALL APART</span>"
       </motion.p>
 
-      <motion.h1
+      {/* Title — diganti dari teks "FAITH GAME" menjadi GIF */}
+      <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.2, duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
-        className="font-[family-name:var(--font-anton)] min-h-16 text-[clamp(2.5rem,11vw,5.5rem)] leading-none tracking-tight mb-2 whitespace-nowrap sm:min-h-20"
+        className="relative w-full max-w-md mt-2 mb-2 aspect-[6.4/1] overflow-hidden"
       >
-        {renderTitle()}
-        <span
-          className={`inline-block w-px h-[1.8rem] bg-white ml-2 transition-opacity ${
-            showCursor ? "opacity-100" : "opacity-0"
-          }`}
+        <Image
+          src="/images/logo/IMG_7540.gif"
+          alt="Faith Game"
+          fill
+          unoptimized
+          className="object-cover"
+          priority
         />
-      </motion.h1>
+      </motion.div>
 
       <motion.div
         initial={{ opacity: 0, y: 20 }}
