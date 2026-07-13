@@ -16,19 +16,22 @@ import {
   useState,
 } from "react";
 
-import { ArrowUp, ArrowDown, Loader2 } from "lucide-react";
+import { ArrowUp, ArrowDown, Loader2, Pencil } from "lucide-react";
 import toast from "react-hot-toast";
 import { ageConvert } from "@/lib/ageConvert";
 import ExportDropdown from "@/components/admin/ExportDropdown";
 import type { Participant } from "@/lib/exportParticipants";
+import { DOMICILI_OPTIONS } from "@/lib/constants/domiciles";
 
 const columnHelper =
   createColumnHelper<any>();
 
 export default function ParticipantsTable({
   data,
+  onRefresh,
 }: {
   data: any[];
+  onRefresh:()=>Promise<void>;
 }) {
 
   // =========================
@@ -80,6 +83,57 @@ export default function ParticipantsTable({
   // =========================
   // ATTENDANCE HANDLER
   // =========================
+
+  const [editingParticipant, setEditingParticipant] =
+    useState<any | null>(null);
+
+  const [saving, setSaving] =
+    useState(false);
+
+  const handleSaveParticipant = async () => {
+    if (!editingParticipant) return;
+
+    try {
+      setSaving(true);
+      const res = await fetch("/api/participants", {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          registrationId: editingParticipant["Registration ID"],
+          nama: editingParticipant.Nama,
+          email: editingParticipant.Email,
+          telepon: "'" + editingParticipant.Telepon,
+          umur: editingParticipant.Umur,
+          domisili: editingParticipant.Domisili,
+          anggota: editingParticipant.Anggota,
+          informan: editingParticipant.Informan,
+          camping: editingParticipant.Camping,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!result.success) {
+        toast.error(result.message);
+        return;
+      }
+
+      await new Promise(resolve => setTimeout(resolve, 500));
+
+      await onRefresh();
+
+      toast.success("Participant berhasil diupdate");
+
+      setEditingParticipant(null);
+
+    } catch (err: any) {
+      toast.error(err.message);
+    } finally {
+      setSaving(false);
+    }
+  };
 
   const handleAttendance =
   async (participant: any) => {
@@ -319,6 +373,42 @@ export default function ParticipantsTable({
             ) : (
               "Check In"
             )}
+          </button>
+        );
+      },
+    }),
+
+    columnHelper.display({
+      id: "action",
+
+      header: "Action",
+
+      cell: (info) => {
+
+        const participant =
+          info.row.original;
+
+        return (
+          <button
+            onClick={() =>
+              setEditingParticipant({
+                ...participant,
+              })
+            }
+            className="
+              flex
+              items-center
+              gap-2
+              px-3
+              py-2
+              rounded-lg
+              bg-blue-500
+              hover:bg-blue-600
+              text-white
+            "
+          >
+            <Pencil size={15} />
+            Edit
           </button>
         );
       },
@@ -611,6 +701,93 @@ export default function ParticipantsTable({
         </button>
 
       </div>
+
+      {editingParticipant && (
+        <div className="fixed inset-0 bg-black/60 flex items-center justify-center z-50">
+
+          <div className="bg-[#111] border border-[#333] rounded-xl p-6 w-[500px]">
+
+            <h2 className="text-xl font-semibold mb-5">
+              Edit Participant
+            </h2>
+
+            <div className="space-y-4">
+
+              <input
+                className="w-full bg-black border border-[#333] rounded-lg p-3"
+                value={editingParticipant.Nama}
+                onChange={(e)=>
+                  setEditingParticipant({
+                    ...editingParticipant,
+                    Nama:e.target.value,
+                  })
+                }
+              />
+
+              <input
+                className="w-full bg-black border border-[#333] rounded-lg p-3"
+                value={editingParticipant.Telepon}
+                onChange={(e)=>
+                  setEditingParticipant({
+                    ...editingParticipant,
+                    Telepon:e.target.value,
+                  })
+                }
+              />
+
+              <select
+                value={editingParticipant.Domisili}
+                onChange={(e) =>
+                  setEditingParticipant({
+                    ...editingParticipant,
+                    Domisili: e.target.value,
+                  })
+                }
+                className="
+                  w-full
+                  bg-black
+                  border
+                  border-[#333]
+                  rounded-lg
+                  p-3
+                  outline-none
+                  focus:border-pink-500
+                  transition-colors
+                "
+              >
+                {DOMICILI_OPTIONS.map((city) => (
+                  <option key={city} value={city}>
+                    {city}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex justify-end gap-3 mt-6">
+
+              <button
+                onClick={() =>
+                  setEditingParticipant(null)
+                }
+                className="px-4 py-2 rounded-lg bg-[#222]"
+              >
+                Cancel
+              </button>
+
+              <button
+                onClick={handleSaveParticipant}
+                disabled={saving}
+                className="px-4 py-2 rounded-lg bg-pink-500 hover:bg-pink-600"
+              >
+                {saving ? "Saving..." : "Save"}
+              </button>
+
+            </div>
+
+          </div>
+
+        </div>
+      )}
     </div>
   );
 }
