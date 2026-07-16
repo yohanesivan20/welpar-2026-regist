@@ -42,7 +42,7 @@ export default function Home() {
                 Tentang KTM
               </a>
               <a
-                href="https://www.instagram.com/p/DH-9ucSBeF-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+                href="https://www.instagram.com/p/Dam-yYpAdA3"
                 target="_blank"
                 rel="noreferrer"
                 className="rounded-full border border-white/10 bg-white/5 px-4 py-2 transition hover:bg-pink-500 hover:text-black"
@@ -84,7 +84,7 @@ export default function Home() {
                   Tentang KTM
                 </a>
                 <a
-                  href="https://www.instagram.com/p/DH-9ucSBeF-/?utm_source=ig_web_copy_link&igsh=MzRlODBiNWFlZA=="
+                  href="https://www.instagram.com/p/Dam-yYpAdA3"
                   target="_blank"
                   rel="noreferrer"
                   className="w-full rounded-full border border-white/10 bg-white/5 px-4 py-3 text-center text-[12px] uppercase tracking-[2px] text-white transition hover:bg-pink-500 hover:text-black"
