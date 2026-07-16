@@ -1,5 +1,12 @@
 "use client";
 
+import { Swiper, SwiperSlide } from "swiper/react";
+import "swiper/css";
+import "swiper/css/navigation";
+import "swiper/css/pagination";
+import { Navigation, Pagination } from "swiper/modules";
+
+import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
@@ -9,9 +16,16 @@ import ShapesBackground from "@/components/ShapesBackground";
 
 export default function Home() {
   const jerseyLink =
-  "https://www.instagram.com/p/DY6j2MKAQdy/?img_index=1";
+  "https://docs.google.com/forms/d/e/1FAIpQLSd6h4TbzESo5CuTUhL_KL5fM2KCpluclO6Mt7HKY9Gwg4rU2w/viewform";
   const [showJerseyModal, setShowJerseyModal] = useState(false);
   const [navOpen, setNavOpen] = useState(false);
+  const merchImages = Array.from({ length: 7 }, (_, i) => ({
+    id: i + 1,
+    src: `/images/merch/merch-${i + 1}.jpeg`,
+  }));
+
+  const [currentImage, setCurrentImage] = useState(0);
+
   return (
     <main className="scroll-smooth min-h-screen flex flex-col items-center justify-center px-4 py-8 relative">
       <ShapesBackground />
@@ -44,13 +58,13 @@ export default function Home() {
               <span>Menu</span>
               <span className="text-2xl leading-none">{navOpen ? "×" : "☰"}</span>
             </button>
-            <Link
-              href={jerseyLink}
-              target="_blank"
+            <button
+              type="button"
+              onClick={() => setShowJerseyModal(true)}
               className="hidden sm:inline-flex items-center justify-center rounded-full bg-pink-500 px-5 py-3 text-[12px] font-semibold uppercase tracking-[2px] text-black transition hover:bg-pink-600"
             >
               Beli Jersey KTM
-            </Link>
+            </button>
           </div>
           <AnimatePresence>
             {navOpen && (
@@ -132,26 +146,75 @@ export default function Home() {
       </footer>
       {showJerseyModal && (
         <div className="fixed inset-0 z-30 flex items-center justify-center bg-black/70 p-4">
-          <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-[#111] p-6 shadow-2xl">
-            <div className="mb-5 flex items-start justify-between gap-4">
-              <div>
-                <p className="text-[11px] uppercase tracking-[4px] text-pink-500">Poster Jersey KTM</p>
-                <h2 className="mt-2 text-xl font-semibold text-white">Coming Soon</h2>
-              </div>
+          <div className="w-full max-w-md rounded-[2rem] border border-white/10 bg-[#111] p-5 shadow-2xl">
+            <div className="relative mb-5 pt-2">
               <button
-                type="button"
                 onClick={() => setShowJerseyModal(false)}
-                className="rounded-full border border-neutral-700 px-3 py-2 text-sm text-neutral-300 transition hover:border-pink-500 hover:text-white"
+                className="absolute right-0 top-0 flex h-10 w-10 items-center justify-center rounded-full border border-neutral-700 text-neutral-300 transition hover:border-pink-500 hover:text-white"
               >
-                Tutup
+                ✕
               </button>
+
+              <div className="text-center">
+                <p className="text-[11px] uppercase tracking-[4px] text-pink-500">
+                  OFFICIAL JERSEY KTM
+                </p>
+
+                <h2 className="mt-2 text-3xl font-bold text-white">
+                  Jersey Muda Mudi Jakarta
+                </h2>
+              </div>
+
             </div>
-            <div className="rounded-[2rem] border border-white/10 bg-linear-to-br from-pink-500 via-purple-500 to-cyan-400 p-8 text-white shadow-[0_0_90px_rgba(236,72,153,0.24)]">
-              <div className="mx-auto mb-5 h-52 w-full max-w-70 rounded-[2rem] bg-white/10 border border-white/20" />
-              <p className="text-center text-sm leading-6 text-white/90">
-                Poster design jualan jersey akan segera hadir. Untuk sekarang, ini adalah placeholder gradien dengan shape modern.
-              </p>
+
+            <div className="relative">
+
+              <div className="relative overflow-hidden rounded-3xl">
+
+                <div className="relative w-full">
+                  <Swiper
+                    modules={[Navigation, Pagination]}
+                    navigation
+                    pagination={{ clickable: true }}
+                    loop
+                  >
+                    {merchImages.map((item) => (
+                      <SwiperSlide key={item.id}>
+                        <div className="mx-auto w-[280px]">
+                          <Image
+                            src={item.src}
+                            alt=""
+                            width={1080}
+                            height={1350}
+                            className="h-auto w-full rounded-3xl"
+                          />
+                        </div>
+                      </SwiperSlide>
+                    ))}
+                  </Swiper>
+                </div>
+              </div>
+
+              <div className="mt-4 flex justify-center gap-2">
+                {merchImages.map((_, index) => (
+                  <button
+                    key={index}
+                    onClick={() => setCurrentImage(index)}
+                    
+                  />
+                ))}
+              </div>
+
+              <Link
+                href={jerseyLink}
+                target="_blank"
+                className="mt-2 flex w-full items-center justify-center rounded-full bg-pink-500 py-2.5 text-sm font-semibold hover:bg-pink-600"
+              >
+                PESAN SEKARANG
+              </Link>
+
             </div>
+
           </div>
         </div>
       )}

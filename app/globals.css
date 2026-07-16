@@ -141,3 +141,38 @@
 .date-input::-moz-focus-inner {
   border: 0;
 }
+
+.swiper-button-next,
+.swiper-button-prev {
+  width: 42px !important;
+  height: 42px !important;
+
+  border-radius: 9999px;
+  background: rgba(236, 72, 153, 0.15);
+  backdrop-filter: blur(10px);
+
+  color: #ec4899 !important;
+  transition: all .25s ease;
+}
+
+.swiper-button-next:hover,
+.swiper-button-prev:hover {
+  background: #ec4899;
+  color: white !important;
+}
+
+.swiper-button-next::after,
+.swiper-button-prev::after {
+  font-size: 18px !important;
+  font-weight: 700;
+}
+
+.swiper-pagination-bullet {
+  background: #ec4899 !important; /* Tailwind pink-500 */
+  opacity: 0.4;
+}
+
+.swiper-pagination-bullet-active {
+  background: #ec4899 !important;
+  opacity: 1;
+}
