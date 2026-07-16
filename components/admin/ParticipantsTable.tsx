@@ -541,7 +541,7 @@ export default function ParticipantsTable({
       border
       border-[#222]
       rounded-2xl
-      overflow-hidden
+      overflow-visible
     ">
 
       {/* TOOLBAR */}
