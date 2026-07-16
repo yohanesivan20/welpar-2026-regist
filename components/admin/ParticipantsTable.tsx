@@ -13,6 +13,7 @@ import {
 import {
   useEffect,
   useMemo,
+  useRef,
   useState,
 } from "react";
 
@@ -25,6 +26,13 @@ import { DOMICILI_OPTIONS } from "@/lib/constants/domiciles";
 
 const columnHelper =
   createColumnHelper<any>();
+
+// Berapa lama (ms) perubahan lokal "dilindungi" dari ketimpa data polling
+// yang belum sempat sinkron dari server.
+const RECENT_UPDATE_PROTECTION_MS = 6000;
+
+// Interval polling untuk sync antar device (ms).
+const POLL_INTERVAL_MS = 5000;
 
 export default function ParticipantsTable({
   data,
@@ -41,9 +49,55 @@ export default function ParticipantsTable({
   const [participants, setParticipants] =
     useState(data);
 
+  // Menyimpan Telepon (key) -> timestamp update lokal terakhir.
+  // Selama masih dalam window proteksi, data dari `data` prop (hasil refresh)
+  // untuk key tsb akan diabaikan supaya tidak "menimpa balik" ke versi lama.
+  const recentUpdatesRef = useRef<Map<string, number>>(new Map());
+
+  const markRecentlyUpdated = (key: string) => {
+    recentUpdatesRef.current.set(key, Date.now());
+  };
+
   useEffect(() => {
-    setParticipants(data);
+
+    setParticipants((prev) => {
+
+        const localMap = new Map(
+            prev.map((p) => [p.Telepon, p])
+        );
+
+        return data.map((item) => {
+
+            const recentAt = recentUpdatesRef.current.get(item.Telepon);
+            const isRecent =
+              recentAt !== undefined &&
+              Date.now() - recentAt < RECENT_UPDATE_PROTECTION_MS;
+
+            if (isRecent) {
+                const local = localMap.get(item.Telepon);
+                if (local) return local;
+            }
+
+            return item;
+        });
+
+    });
+
   }, [data]);
+
+  // =========================
+  // POLLING — sync dari device lain
+  // =========================
+
+  useEffect(() => {
+
+    const interval = setInterval(() => {
+      onRefresh();
+    }, POLL_INTERVAL_MS);
+
+    return () => clearInterval(interval);
+
+  }, [onRefresh]);
 
   const [search, setSearch] =
     useState("");
@@ -93,8 +147,11 @@ export default function ParticipantsTable({
   const handleSaveParticipant = async () => {
     if (!editingParticipant) return;
 
+    const originalTelepon = editingParticipant.Telepon;
+
     try {
       setSaving(true);
+
       const res = await fetch("/api/participants", {
         method: "PUT",
         headers: {
@@ -120,13 +177,32 @@ export default function ParticipantsTable({
         return;
       }
 
-      await new Promise(resolve => setTimeout(resolve, 500));
+      // =========================
+      // OPTIMISTIC UPDATE — langsung terapkan perubahan
+      // ke state lokal, tanpa nunggu refresh dari server.
+      // =========================
 
-      await onRefresh();
+      setParticipants((prev) =>
+        prev.map((p) =>
+          p["Registration ID"] === editingParticipant["Registration ID"]
+            ? { ...p, ...editingParticipant }
+            : p
+        )
+      );
+
+      // Lindungi key ini dari ketimpa balik oleh polling yang mungkin
+      // masih membawa data lama (race condition dengan DB/sheet).
+      markRecentlyUpdated(originalTelepon);
+      if (editingParticipant.Telepon !== originalTelepon) {
+        markRecentlyUpdated(editingParticipant.Telepon);
+      }
 
       toast.success("Participant berhasil diupdate");
-
       setEditingParticipant(null);
+
+      // Refresh di background untuk sinkronisasi jangka panjang,
+      // tidak perlu ditunggu (tidak memblokir UI).
+      onRefresh();
 
     } catch (err: any) {
       toast.error(err.message);
@@ -212,6 +288,8 @@ export default function ParticipantsTable({
         )
       );
 
+      markRecentlyUpdated(participant.Telepon);
+
       // =========================
       // SUCCESS ALERT
       // =========================
@@ -219,6 +297,9 @@ export default function ParticipantsTable({
       toast.success(
         `Status berhasil diubah menjadi ${result.status}`
       );
+
+      // Sync ringan di background, tidak memblokir.
+      onRefresh();
 
     } catch (err: any) {
 
