@@ -70,6 +70,30 @@ const CAMPING_OPTIONS = [
   "Pernah di Tempat Lain",
 ];
 
+const getGoogleCalendarUrl = () => {
+  const title = "FAITH GAME KTM MUDA MUDI JAKARTA";
+
+  // Format: YYYYMMDDTHHmmss
+  const start = "20260829T130000";
+  const end = "20260829T170000";
+
+  const details =
+    "Faith Game KTM Muda Mudi Jakarta.";
+
+  const location =
+    "Aula Lantai 8 Sekolah St. Yakobus, Kelapa Gading, Jakarta Utara"; // ganti dengan alamat sebenarnya
+
+  const params = new URLSearchParams({
+    action: "TEMPLATE",
+    text: title,
+    dates: `${start}/${end}`,
+    details,
+    location,
+  });
+
+  return `https://calendar.google.com/calendar/render?${params.toString()}`;
+};
+
 // Komponen Select reusable
 function FormSelect({
   label,
@@ -136,6 +160,9 @@ export default function RegistrationForm() {
         setPlayerNumber(res.playerNumber || "000");
         setSuccess(true);
         reset();
+
+        window.open(getGoogleCalendarUrl(), "_blank");
+
         toast.success("Pendaftaran berhasil! Selamat datang di arena.");
       } else {
         toast.error(res.message || "Terjadi kesalahan.");
@@ -188,13 +215,13 @@ export default function RegistrationForm() {
             Kamu Sudah Terdaftar
           </h2>
           <div className="flex w-full max-w-xs flex-col gap-3 mx-auto mb-6">
-            <a
+            {/* <a
               href=""
               className="inline-flex w-full items-center justify-center rounded-full border border-pink-500 bg-pink-500/10 px-5 py-3 text-sm font-semibold uppercase tracking-[2px] text-pink-500 transition hover:bg-pink-500 hover:text-black"
               aria-label="Gabung grup WhatsApp"
             >
               Gabung ke WhatsApp Group
-            </a>
+            </a> */}
             <Button
               variant="outline"
               className="w-full border-neutral-800 text-neutral-400 hover:border-pink-500 hover:text-pink-500 bg-transparent text-[11px] tracking-[3px] uppercase"
