@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useForm } from "react-hook-form";
 import { motion, AnimatePresence } from "framer-motion";
 import toast from "react-hot-toast";
@@ -143,6 +143,8 @@ export default function RegistrationForm() {
   const [success, setSuccess] = useState(false);
   const [playerNumber, setPlayerNumber] = useState("");
 
+  const submittingRef = useRef(false);
+
   const {
     register,
     handleSubmit,
@@ -152,6 +154,12 @@ export default function RegistrationForm() {
   } = useForm<FormData>();
 
   const onSubmit = async (data: FormData) => {
+    // Prevent duplicate submission
+    if (submittingRef.current) {
+      return;
+    }
+
+    submittingRef.current = true;
     setIsSubmitting(true);
 
     try {
@@ -170,6 +178,7 @@ export default function RegistrationForm() {
     } catch {
       toast.error("Gagal menghubungi server.");
     } finally {
+      submittingRef.current = false;
       setIsSubmitting(false);
     }
   };

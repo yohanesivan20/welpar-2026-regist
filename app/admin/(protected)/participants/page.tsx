@@ -41,14 +41,9 @@ export default function ParticipantsPage() {
     }
   }, []);
 
+  // Fetch hanya ketika halaman pertama kali dibuka
   useEffect(() => {
     fetchParticipants();
-
-    const interval = setInterval(() => {
-      fetchParticipants();
-    }, 5000);
-
-    return () => clearInterval(interval);
   }, [fetchParticipants]);
 
   return (
@@ -64,10 +59,10 @@ export default function ParticipantsPage() {
           </p>
         </div>
 
-        <div className="flex items-center gap-2 text-xs text-neutral-500 mt-1">
+        <div className="mt-1 flex items-center gap-2 text-xs text-neutral-500">
           <span className="relative flex h-2 w-2">
-            <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-green-400 opacity-75" />
-            <span className="relative inline-flex rounded-full h-2 w-2 bg-green-500" />
+            <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-green-400 opacity-75" />
+            <span className="relative inline-flex h-2 w-2 rounded-full bg-green-500" />
           </span>
 
           {lastUpdated
@@ -79,7 +74,7 @@ export default function ParticipantsPage() {
       {loading ? (
         <div className="flex items-center justify-center py-20 text-neutral-400">
           <Loader2
-            className="animate-spin mr-2"
+            className="mr-2 animate-spin"
             size={20}
           />
           Memuat data...

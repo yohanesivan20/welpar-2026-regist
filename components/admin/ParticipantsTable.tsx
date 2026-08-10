@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 
-import { ArrowUp, ArrowDown, Loader2, Pencil } from "lucide-react";
+import { ArrowUp, ArrowDown, Loader2, Pencil, RefreshCw } from "lucide-react";
 import toast from "react-hot-toast";
 import { ageConvert } from "@/lib/ageConvert";
 import ExportDropdown from "@/components/admin/ExportDropdown";
@@ -31,9 +31,6 @@ const columnHelper =
 // yang belum sempat sinkron dari server.
 const RECENT_UPDATE_PROTECTION_MS = 6000;
 
-// Interval polling untuk sync antar device (ms).
-const POLL_INTERVAL_MS = 5000;
-
 export default function ParticipantsTable({
   data,
   onRefresh,
@@ -42,6 +39,8 @@ export default function ParticipantsTable({
   onRefresh:()=>Promise<void>;
 }) {
 
+  const [refreshing, setRefreshing] = useState(false);
+  
   // =========================
   // STATES
   // =========================
@@ -88,16 +87,6 @@ export default function ParticipantsTable({
   // =========================
   // POLLING — sync dari device lain
   // =========================
-
-  useEffect(() => {
-
-    const interval = setInterval(() => {
-      onRefresh();
-    }, POLL_INTERVAL_MS);
-
-    return () => clearInterval(interval);
-
-  }, [onRefresh]);
 
   const [search, setSearch] =
     useState("");
@@ -313,6 +302,18 @@ export default function ParticipantsTable({
     } finally {
 
       setLoadingPhone("");
+    }
+  };
+
+  const handleRefresh = async () => {
+    if (refreshing) return;
+
+    setRefreshing(true);
+
+    try {
+      await onRefresh();
+    } finally {
+      setRefreshing(false);
     }
   };
 
@@ -579,8 +580,40 @@ export default function ParticipantsTable({
 
           {/* Kanan — Export + Search */}
           <div className="flex items-center gap-3">
+            <button
+              type="button"
+              onClick={handleRefresh}
+              disabled={refreshing}
+              title="Refresh data"
+              className="
+                inline-flex
+                h-10
+                w-10
+                items-center
+                justify-center
+                rounded-lg
+                border
+                border-[#2a2a2a]
+                bg-[#151515]
+                text-neutral-300
+                transition
+                hover:border-pink-500
+                hover:bg-pink-500/10
+                hover:text-pink-500
+                disabled:cursor-not-allowed
+                disabled:opacity-50
+              "
+            >
+              {refreshing ? (
+                <Loader2
+                  size={18}
+                  className="animate-spin"
+                />
+              ) : (
+                <RefreshCw size={18} />
+              )}
+            </button>
             <ExportDropdown data={participants as Participant[]} />
-
             <input
               type="text"
               placeholder="Search participant..."
