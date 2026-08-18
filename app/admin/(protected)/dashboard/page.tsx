@@ -4,12 +4,14 @@ import { useEffect, useState, useCallback } from "react";
 import { Users, UserCheck, Clock, Loader2 } from "lucide-react";
 import DomisiliChart from "@/components/admin/charts/DomisiliChart";
 import MembershipChart from "@/components/admin/charts/MembershipChart";
+import CampingChart from "@/components/admin/charts/CampingChart";
 
 type Participant = {
   Nama: string;
   Domisili: string;
   Anggota: string;
   Status: string;
+  Camping: string;
 };
 
 export default function DashboardPage() {
@@ -98,6 +100,10 @@ export default function DashboardPage() {
         })}
       </div>
 
+      <CampingChart
+        data={stats}
+        isLoading={loading}
+      />
       {/* ✅ Charts — responsive 2 col desktop, 1 col mobile */}
       <div className="grid md:grid-cols-2 gap-5">
         <DomisiliChart data={stats} isLoading={loading} />
