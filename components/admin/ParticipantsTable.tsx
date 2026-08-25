@@ -17,7 +17,7 @@ import {
   useState,
 } from "react";
 
-import { ArrowUp, ArrowDown, Loader2, Pencil, RefreshCw } from "lucide-react";
+import { ArrowUp, ArrowDown, Loader2, Pencil, RefreshCw, Trash2 } from "lucide-react";
 import toast from "react-hot-toast";
 import { ageConvert } from "@/lib/ageConvert";
 import ExportDropdown from "@/components/admin/ExportDropdown";
@@ -197,6 +197,63 @@ export default function ParticipantsTable({
       toast.error(err.message);
     } finally {
       setSaving(false);
+    }
+  };
+
+  const [deleting, setDeleting] = useState("");
+
+  const handleDeleteParticipant = async (participant: any) => {
+    const confirmed = window.confirm(
+      `Apakah Anda yakin ingin menghapus participant "${participant.Nama}"?`
+    );
+
+    if (!confirmed) return;
+
+    const registrationId = participant["Registration ID"];
+
+    try {
+      setDeleting(registrationId);
+
+      const res = await fetch("/api/participants", {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          registrationId,
+        }),
+      });
+
+      const result = await res.json();
+
+      if (!res.ok || !result.success) {
+        toast.error(
+          result.message || "Gagal menghapus participant"
+        );
+        return;
+      }
+
+      // Optimistic update
+      setParticipants((prev) =>
+        prev.filter(
+          (p) =>
+            p["Registration ID"] !== registrationId
+        )
+      );
+
+      toast.success("Participant berhasil dihapus");
+
+      // Sync dengan server
+      onRefresh();
+
+    } catch (err: any) {
+      console.error(err);
+
+      toast.error(
+        err.message || "Terjadi kesalahan saat menghapus participant"
+      );
+    } finally {
+      setDeleting("");
     }
   };
 
@@ -466,32 +523,75 @@ export default function ParticipantsTable({
       header: "Action",
 
       cell: (info) => {
+        const participant = info.row.original;
 
-        const participant =
-          info.row.original;
+        const isDeleting =
+          deleting === participant["Registration ID"];
 
         return (
-          <button
-            onClick={() =>
-              setEditingParticipant({
-                ...participant,
-              })
-            }
-            className="
-              flex
-              items-center
-              gap-2
-              px-3
-              py-2
-              rounded-lg
-              bg-blue-500
-              hover:bg-blue-600
-              text-white
-            "
-          >
-            <Pencil size={15} />
-            Edit
-          </button>
+          <div className="flex items-center gap-2">
+
+            {/* EDIT */}
+            <button
+              onClick={() =>
+                setEditingParticipant({
+                  ...participant,
+                })
+              }
+              disabled={isDeleting}
+              className="
+                flex
+                items-center
+                gap-2
+                px-3
+                py-2
+                rounded-lg
+                bg-blue-500
+                hover:bg-blue-600
+                text-white
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+              "
+            >
+              <Pencil size={15} />
+              Edit
+            </button>
+
+            {/* DELETE */}
+            <button
+              onClick={() =>
+                handleDeleteParticipant(participant)
+              }
+              disabled={isDeleting}
+              className="
+                flex
+                items-center
+                gap-2
+                px-3
+                py-2
+                rounded-lg
+                bg-red-500/20
+                hover:bg-red-500/30
+                text-red-400
+                border
+                border-red-500/30
+                disabled:opacity-50
+                disabled:cursor-not-allowed
+              "
+            >
+              {isDeleting ? (
+                <Loader2
+                  size={15}
+                  className="animate-spin"
+                />
+              ) : (
+                <Trash2 size={15} />
+              )}
+
+              {isDeleting ? "Deleting..." : "Delete"}
+            </button>
+
+          </div>
         );
       },
     }),
