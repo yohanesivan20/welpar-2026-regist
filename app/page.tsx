@@ -15,6 +15,7 @@ import EventCarousel from "@/components/EventCarousel";
 import ShapesBackground from "@/components/ShapesBackground";
 
 export default function Home() {
+  const REGISTRATION_OPEN = process.env.NEXT_PUBLIC_REGISTRATION_OPEN === "true";
   const jerseyLink =
   "https://docs.google.com/forms/d/e/1FAIpQLSd6h4TbzESo5CuTUhL_KL5fM2KCpluclO6Mt7HKY9Gwg4rU2w/viewform";
   const [showJerseyModal, setShowJerseyModal] = useState(false);
@@ -108,17 +109,36 @@ export default function Home() {
 
         <EventBanner />
         <EventCarousel />
-        <div className="mt-8 text-center bg-[#0d0d0d] border border-[#1c1c1c] border-t-0 rounded-b-3xl px-6 py-10 sm:px-10">
-          <p className="mx-auto max-w-xl text-sm leading-7 text-neutral-400 sm:text-base mb-4">
-            Are you brave enough to take on this faith game challenge?
-          </p>
-          <Link
-            href="/register"
-            className="inline-flex items-center justify-center rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold uppercase tracking-[2px] text-white transition hover:bg-pink-600 active:scale-95"
-          >
-            JOIN THE GAME
-          </Link>
-        </div>
+        {REGISTRATION_OPEN ? (
+          <div className="mt-8 text-center bg-[#0d0d0d] border border-[#1c1c1c] border-t-0 rounded-b-3xl px-6 py-10 sm:px-10">
+            <p className="mx-auto max-w-xl text-sm leading-7 text-neutral-400 sm:text-base mb-4">
+              Are you brave enough to take on this faith game challenge?
+            </p>
+            <Link
+              href="/register"
+              className="inline-flex items-center justify-center rounded-full bg-pink-500 px-8 py-3 text-sm font-semibold uppercase tracking-[2px] text-white transition hover:bg-pink-600 active:scale-95"
+            >
+              JOIN THE GAME
+            </Link>
+          </div>
+        ) : (
+          <div className="mt-8 text-center bg-[#0d0d0d] border border-[#1c1c1c] border-t-0 rounded-b-3xl px-6 py-10 sm:px-10">
+            <p className="mx-auto max-w-xl text-sm leading-7 text-neutral-400 sm:text-base mb-4">
+              FAITH GAME 2026
+            </p>
+
+            <h2 className="mt-4 text-4xl font-bold text-white">
+              Pendaftaran Ditutup
+            </h2>
+
+            <p className="mt-5 text-neutral-400">
+              Terima kasih atas antusiasme kamu.
+              <br />
+              Pendaftaran Faith Game B2B 2026 saat ini sudah ditutup.
+            </p>
+          </div>
+        )}
+        
       </div>
       <footer className="mt-auto py-8 text-[11px] text-neutral-800 tracking-[2px] text-center relative z-10">
         <div className="mb-3 text-sm text-neutral-400">
